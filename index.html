@@ -4,15 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Smart ID Card - System Portal</title>
-  <script src="https://cdn.tailwindcss.com">
-function filterKelasGuru(kelas){
-  const cards=document.querySelectorAll('[data-kelas-siswa]');
-  cards.forEach(card=>{
-    card.style.display=(kelas==='SEMUA' || card.dataset.kelasSiswa===kelas)?'':'none';
-  });
-}
-
-</script>
+  <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <script>
@@ -58,9 +50,7 @@ function filterKelasGuru(kelas){
 </head>
 <body class="min-h-screen p-3 md:p-6 flex items-center justify-center">
 
-  <!-- ========================================== -->
-  <!-- VIEW 1: HALAMAN LOGIN                      -->
-  <!-- ========================================== -->
+  <!-- VIEW 1: HALAMAN LOGIN -->
   <div id="view-login" class="w-full max-w-md glass-panel p-8 rounded-3xl space-y-6">
     <div class="text-center space-y-2">
       <h1 class="text-3xl font-black italic tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-fuchsia-400 to-pink-500 uppercase">
@@ -68,7 +58,6 @@ function filterKelasGuru(kelas){
       </h1>
       <p class="text-xs text-gray-400 font-semibold">Sistem Akses Portal Terpadu</p>
       
-      <!-- BRANDING TIM AZWIN -->
       <div class="flex justify-center items-center gap-2 pt-1">
         <span class="bg-gradient-to-r from-pink-500 to-purple-600 text-white font-black text-[8px] tracking-widest px-2 py-0.5 rounded-lg uppercase">
           BY TIM AZWIN
@@ -76,20 +65,14 @@ function filterKelasGuru(kelas){
       </div>
     </div>
 
-    <!-- LOGIN TANPA TAMPILAN ROLE -->
-    <div class="hidden">
-      <input type="hidden" id="active-role" value="">
-    </div>
-
     <form onsubmit="executeLogin(event)" class="space-y-4" autocomplete="off">
-      <input type="hidden" id="active-role" value="">
+      <input type="hidden" id="active-role" value="guru">
 
       <div>
         <label id="label-user" class="text-[10px] font-bold text-cyan-400 uppercase mb-1 block tracking-wider"> NIP / NISN </label>
         <input type="text" id="input-username" placeholder="Masukkan NIP/NISN..." class="w-full bg-black/50 border border-white/10 rounded-xl p-3 text-xs font-bold text-white focus:outline-none focus:border-cyan-400" autocomplete="off" required>
       </div>
 
-      <!-- KOLOM PASSCODE / PASSWORD AMAN -->
       <div>
         <div class="flex justify-between items-center mb-1">
           <label id="label-passcode" class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">PASSCODE / PIN</label>
@@ -114,12 +97,9 @@ function filterKelasGuru(kelas){
   </div>
 
 
-  <!-- ========================================== -->
-  <!-- VIEW 2: HALAMAN DASHBOARD                  -->
-  <!-- ========================================== -->
+  <!-- VIEW 2: HALAMAN DASHBOARD -->
   <div id="view-dashboard" class="w-full max-w-6xl mx-auto space-y-5 hidden">
     
-    <!-- HEADER PORTAL -->
     <header class="glass-panel rounded-2xl p-4 flex flex-col md:flex-row justify-between items-center gap-3">
       <div>
         <h1 class="text-xl md:text-2xl font-black italic tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-fuchsia-400 to-pink-500 uppercase">
@@ -151,7 +131,6 @@ function filterKelasGuru(kelas){
 
     <main class="space-y-4">
       
-      <!-- BANNER PERINGATAN NILAI DI BAWAH KKM (ROLE SISWA & GURU) -->
       <div id="alert-kkm-container" class="hidden bg-red-950/80 border-2 border-red-500 text-red-200 p-4 rounded-2xl animate-pulse space-y-1">
         <div class="flex items-center gap-2 font-black text-sm text-red-400">
           <span>⚠️ PERINGATAN AKADEMIK (NILAI DI BAWAH KKM)</span>
@@ -161,7 +140,6 @@ function filterKelasGuru(kelas){
         </p>
       </div>
 
-      <!-- SECTION: KONTROL KHUSUS ORANG TUA (PILIH SEMESTER GRAFIK) -->
       <section id="section-ortu-control" class="hidden glass-panel p-4 rounded-2xl border border-fuchsia-500/40 flex flex-col md:flex-row justify-between items-center gap-3">
         <div class="flex items-center gap-3">
           <span class="text-2xl">👨‍👩‍👧</span>
@@ -202,34 +180,41 @@ function filterKelasGuru(kelas){
           </div>
         </div>
 
-        <form onsubmit="simpanDataSiswa(event)" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-2">
+        <form id="form-siswa" onsubmit="simpanDataSiswa(event)" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-2">
           <input type="text" id="input-sekolah" placeholder="Nama Sekolah..." class="bg-black/50 border border-white/10 rounded-lg p-2 text-xs font-bold text-white focus:outline-none" required>
           <input type="text" id="input-nama" placeholder="Nama Lengkap..." class="bg-black/50 border border-white/10 rounded-lg p-2 text-xs font-bold text-white focus:outline-none" required>
           <input type="text" id="input-nisn" placeholder="NISN..." class="bg-black/50 border border-white/10 rounded-lg p-2 text-xs font-bold text-white focus:outline-none" required>
-          <select id="input-kelas" class="bg-black/50 border border-white/10 rounded-lg p-2 text-xs font-bold text-white focus:outline-none">
-<option value="X IPA 1">X IPA 1</option>
-<option value="X IPA 2">X IPA 2</option>
-<option value="X IPS 1">X IPS 1</option>
-<option value="X IPS 2">X IPS 2</option>
-<option value="XI IPA 1">XI IPA 1</option>
-<option value="XI IPA 2">XI IPA 2</option>
-<option value="XI IPS 1">XI IPS 1</option>
-<option value="XI IPS 2">XI IPS 2</option>
-<option value="XII IPA 1">XII IPA 1</option>
-<option value="XII IPA 2">XII IPA 2</option>
-<option value="XII IPS 1">XII IPS 1</option>
-<option value="XII IPS 2">XII IPS 2</option>
-<option value="CUSTOM">📝 LAINNYA (ISI KELAS CUSTOM/BEBAS)</option>            
-</select>
-          <input type="text" id="input-pw-siswa" placeholder="PW Siswa..." class="bg-black/50 border border-cyan-500/30 rounded-lg p-2 text-xs font-bold text-cyan-300 focus:outline-none">
-          <input type="text" id="input-pw-ortu" placeholder="PW Ortu..." class="bg-black/50 border border-fuchsia-500/30 rounded-lg p-2 text-xs font-bold text-fuchsia-300 focus:outline-none">
-          <div class="col-span-1 md:col-span-3 lg:col-span-6 flex justify-end">
+          
+          <div class="flex flex-col gap-1">
+            <select id="input-kelas" onchange="cekKelasCustom()" class="bg-black/50 border border-white/10 rounded-lg p-2 text-xs font-bold text-white focus:outline-none">
+              <option value="X IPA 1">X IPA 1</option>
+              <option value="X IPA 2">X IPA 2</option>
+              <option value="X IPS 1">X IPS 1</option>
+              <option value="X IPS 2">X IPS 2</option>
+              <option value="XI IPA 1">XI IPA 1</option>
+              <option value="XI IPA 2">XI IPA 2</option>
+              <option value="XI IPS 1">XI IPS 1</option>
+              <option value="XI IPS 2">XI IPS 2</option>
+              <option value="XII IPA 1">XII IPA 1</option>
+              <option value="XII IPA 2">XII IPA 2</option>
+              <option value="XII IPS 1">XII IPS 1</option>
+              <option value="XII IPS 2">XII IPS 2</option>
+              <option value="CUSTOM">📝 LAINNYA (ISI KELAS CUSTOM)</option>            
+            </select>
+            <input type="text" id="input-kelas-custom" placeholder="Nama Kelas Custom..." class="hidden bg-black/60 border border-cyan-500/50 rounded-lg p-2 text-xs font-bold text-white focus:outline-none">
+          </div>
+
+          <input type="text" id="input-pw-siswa" placeholder="PW Siswa..." class="bg-black/50 border border-cyan-500/30 rounded-lg p-2 text-xs font-bold text-cyan-300 focus:outline-none" required>
+          <input type="text" id="input-pw-ortu" placeholder="PW Ortu..." class="bg-black/50 border border-fuchsia-500/30 rounded-lg p-2 text-xs font-bold text-fuchsia-300 focus:outline-none" required>
+          
+          <div class="col-span-1 md:col-span-3 lg:col-span-6 flex justify-end gap-2">
+            <button type="button" onclick="batalEdit()" id="btn-batal-edit" class="hidden bg-gray-600 hover:bg-gray-500 text-white font-black px-4 py-2 rounded-lg text-xs uppercase transition">Batal Edit</button>
             <button type="submit" id="btn-submit-siswa" class="bg-cyan-500 hover:bg-cyan-400 text-black font-black px-4 py-2 rounded-lg text-xs uppercase transition">+ Simpan Data Siswa</button>
           </div>
         </form>
       </section>
 
-      <!-- PROFIL SISWA AKTIF & BLU BCA -->
+      <!-- PROFIL SISWA AKTIF -->
       <section id="section-profil-siswa" class="glass-panel p-3.5 rounded-2xl flex flex-col md:flex-row justify-between items-center gap-3 bg-purple-950/20">
         <div class="flex items-center gap-3">
           <span class="text-2xl">🎒</span>
@@ -297,7 +282,6 @@ function filterKelasGuru(kelas){
             <div>
               <h3 class="font-black text-sm text-cyan-300">📚 DAFTAR MATA PELAJARAN & NILAI PER SEMESTER</h3>
             </div>
-            <!-- SELECTOR SEMESTER UTAMA (1-6) -->
             <div class="flex items-center gap-2">
               <label class="text-xs font-bold text-purple-300">PILIH SEMESTER:</label>
               <select id="select-semester" onchange="gantiSemesterGlobal()" class="bg-black/80 border-2 border-purple-500 rounded-lg px-3 py-1 text-xs font-black text-purple-300 focus:outline-none">
@@ -311,7 +295,6 @@ function filterKelasGuru(kelas){
             </div>
           </div>
 
-          <!-- FORM TAMBAH MAPEL DENGAN PILIHAN LENGKAP ATAU CUSTOM -->
           <div id="wrapper-tambah-mapel" class="grid grid-cols-1 md:grid-cols-3 gap-2 bg-black/40 p-2.5 rounded-xl border border-white/5">
             <div>
               <label class="text-[10px] font-bold text-gray-400 block mb-0.5">Pilih Opsi Mapel Lengkap:</label>
@@ -460,7 +443,6 @@ function filterKelasGuru(kelas){
           </div>
         </div>
 
-        <!-- GRAFIK TREN KESELURUHAN SEMESTER (1-6) PER SISWA -->
         <div class="glass-panel p-4 rounded-2xl space-y-2 md:col-span-2 border border-fuchsia-500/30">
           <h4 class="text-xs font-black text-fuchsia-400 uppercase tracking-wider">
             📊 TREN RATA-RATA NILAI KESELURUHAN SEMESTER (SEMESTER 1 - 6)
@@ -474,14 +456,7 @@ function filterKelasGuru(kelas){
     </main>
   </div>
 
-
-  <!-- ========================================== -->
-  <!-- SISTEM LOGIKA JAVASCRIPT GABUNGAN          -->
-  <!-- ========================================== -->
   <script>
-    // ------------------------------------------
-    // 1. MANAJEMEN SESI & AUTHENTICATION (LOGIN)
-    // ------------------------------------------
     function togglePasscode(inputId, btn) {
       const input = document.getElementById(inputId);
       if (input.type === "password") {
@@ -490,63 +465,6 @@ function filterKelasGuru(kelas){
       } else {
         input.type = "password";
         btn.textContent = "👁️";
-      }
-    }
-
-    function selectRole(role) {
-      document.getElementById('active-role').value = role;
-
-      const tabGuru = document.getElementById('tab-guru');
-      const tabSiswa = document.getElementById('tab-siswa');
-      const tabOrtu = document.getElementById('tab-ortu');
-      
-      const labelUser = document.getElementById('label-user');
-      const labelPasscode = document.getElementById('label-passcode');
-      const inputUsername = document.getElementById('input-username');
-      const inputPasscode = document.getElementById('input-passcode');
-      const roleDescription = document.getElementById('role-description');
-      const btnSubmit = document.getElementById('btn-submit');
-
-      inputUsername.value = '';
-      inputPasscode.value = '';
-      inputPasscode.type = 'password';
-
-      [tabGuru, tabSiswa, tabOrtu].forEach(tab => {
-        tab.className = "py-2.5 rounded-xl text-xs font-black transition text-gray-400 hover:text-white";
-      });
-
-      if (role === 'guru') {
-        tabGuru.className = "py-2.5 rounded-xl transition bg-cyan-500 text-black shadow-lg shadow-cyan-500/30 font-black";
-        labelUser.textContent = "NIP / ID GURU";
-        labelUser.className = "text-[10px] font-bold text-cyan-400 uppercase mb-1 block tracking-wider";
-        inputUsername.placeholder = "Masukkan NIP Guru...";
-        labelPasscode.textContent = "PASSCODE / PASSWORD GURU";
-        inputPasscode.placeholder = "Masukkan password guru...";
-        roleDescription.className = "bg-cyan-950/40 border border-cyan-500/30 p-3.5 rounded-2xl text-xs text-cyan-200";
-        roleDescription.innerHTML = "🔓 <b>Akses Guru:</b> Menggunakan password keamanan tingkat tinggi.";
-        btnSubmit.className = "w-full bg-cyan-400 hover:bg-cyan-300 text-black font-black py-3.5 rounded-2xl text-xs uppercase tracking-wider transition shadow-lg shadow-cyan-500/20";
-      } 
-      else if (role === 'siswa') {
-        tabSiswa.className = "py-2.5 rounded-xl transition bg-fuchsia-500 text-black shadow-lg shadow-fuchsia-500/30 font-black";
-        labelUser.textContent = "NISN SISWA";
-        labelUser.className = "text-[10px] font-bold text-fuchsia-400 uppercase mb-1 block tracking-wider";
-        inputUsername.placeholder = "Masukkan NISN Siswa...";
-        labelPasscode.textContent = "PASSWORD SISWA";
-        inputPasscode.placeholder = "Masukkan password siswa...";
-        roleDescription.className = "bg-fuchsia-950/40 border border-fuchsia-500/30 p-3.5 rounded-2xl text-xs text-fuchsia-200";
-        roleDescription.innerHTML = "🎒 <b>Akses Siswa:</b> Masukkan NISN dan password akun masing-masing.";
-        btnSubmit.className = "w-full bg-fuchsia-500 hover:bg-fuchsia-400 text-black font-black py-3.5 rounded-2xl text-xs uppercase tracking-wider transition shadow-lg shadow-fuchsia-500/20";
-      } 
-      else if (role === 'ortu') {
-        tabOrtu.className = "py-2.5 rounded-xl transition bg-amber-400 text-black shadow-lg shadow-amber-400/30 font-black";
-        labelUser.textContent = "NISN / ID ANAK";
-        labelUser.className = "text-[10px] font-bold text-amber-400 uppercase mb-1 block tracking-wider";
-        inputUsername.placeholder = "Masukkan NISN Anak...";
-        labelPasscode.textContent = "PASSWORD ORANG TUA";
-        inputPasscode.placeholder = "Masukkan password orang tua...";
-        roleDescription.className = "bg-amber-950/40 border border-amber-500/30 p-3.5 rounded-2xl text-xs text-amber-200";
-        roleDescription.innerHTML = "👨‍👩‍👧 <b>Akses Orang Tua:</b> Menggunakan password khusus akun orang tua.";
-        btnSubmit.className = "w-full bg-amber-400 hover:bg-amber-300 text-black font-black py-3.5 rounded-2xl text-xs uppercase tracking-wider transition shadow-lg shadow-amber-400/20";
       }
     }
 
@@ -629,9 +547,6 @@ function filterKelasGuru(kelas){
       window.open('https://blubybcadigital.id/', '_blank');
     }
 
-    // ------------------------------------------
-    // 2. LOGIKA DASHBOARD & SISTEM AKADEMIK
-    // ------------------------------------------
     let dbSiswa = JSON.parse(localStorage.getItem('smart_id_db_siswa')) || [
       {
         nisn: "2001",
@@ -641,61 +556,21 @@ function filterKelasGuru(kelas){
         pwSiswa: "Marsha123",
         pwOrtu: "OrtuMarsha#",
         nilai: {
-          "Semester 1": { "Matematika": 88, "Bahasa Indonesia": 90, "Bahasa Inggris": 85 },
-          "Semester 2": { "Matematika": 85, "Bahasa Indonesia": 88, "Bahasa Inggris": 87 },
-          "Semester 3": { "Matematika": 90, "Bahasa Indonesia": 92, "Bahasa Inggris": 88 },
-          "Semester 4": { "Matematika": 92, "Bahasa Indonesia": 94, "Bahasa Inggris": 90 },
-          "Semester 5": { "Matematika": 95, "Bahasa Indonesia": 96, "Bahasa Inggris": 93 }
+          "Semester 1": { "Matematika": 88, "Bahasa Indonesia": 90, "Bahasa Inggris": 85 }
         },
         absensi: {
-          "Semester 1": { "Januari": { hadir: 20, sakit: 1, izin: 0, alpha: 0 } }
+          "Ganjil": { "Juli": { hadir: 20, sakit: 1, izin: 0, alpha: 0 } }
         },
         prestasi: [
           { nama: "Juara 1 Olimpiade Matematika", tingkat: "Kota/Kabupaten" }
-        ]
-      },
-      {
-        nisn: "2002",
-        nama: "Ivanka",
-        sekolah: "SMA Negeri 1",
-        kelas: "XII IPA 1",
-        pwSiswa: "Ivanka123",
-        pwOrtu: "OrtuIvanka#",
-        nilai: {
-          "Semester 1": { "Matematika": 90, "Bahasa Indonesia": 80, "Bahasa Inggris": 85 },
-          "Semester 2": { "Matematika": 80, "Bahasa Indonesia": 92, "Bahasa Inggris": 82 },
-          "Semester 3": { "Matematika": 86, "Bahasa Indonesia": 88, "Bahasa Inggris": 84 },
-          "Semester 4": { "Matematika": 89, "Bahasa Indonesia": 90, "Bahasa Inggris": 87 }
-        },
-        absensi: {
-          "Semester 1": { "Januari": { hadir: 20, sakit: 1, izin: 0, alpha: 0 } }
-        },
-        prestasi: [
-          { nama: "Juara 1 Lomba Debat Bahasa Inggris", tingkat: "Provinsi" }
-        ]
-      },
-      {
-        nisn: "2003",
-        nama: "Athala",
-        sekolah: "SMA Negeri 1",
-        kelas: "XII IPA 1",
-        pwSiswa: "Athala123",
-        pwOrtu: "OrtuAthala#",
-        nilai: {
-          "Semester 1": { "Matematika": 85, "Bahasa Indonesia": 100, "Bahasa Inggris": 75 },
-          "Semester 2": { "Matematika": 85, "Bahasa Indonesia": 88, "Bahasa Inggris": 87 },
-          "Semester 3": { "Matematika": 88, "Bahasa Indonesia": 90, "Bahasa Inggris": 89 }
-        },
-        absensi: {
-          "Semester 1": { "Januari": { hadir: 20, sakit: 1, izin: 0, alpha: 0 } }
-        },
-        prestasi: [
-          { nama: "Juara 2 FLS2N Seni Musik", tingkat: "Nasional" }
         ]
       }
     ];
 
     let currentSiswaIndex = 0;
+    let isEditingSiswa = false;
+    let editSiswaIndex = null;
+
     let chartNilaiInstance = null;
     let chartAbsenInstance = null;
     let chartTrenSemesterInstance = null;
@@ -752,6 +627,7 @@ function filterKelasGuru(kelas){
         btnSimpanNilai.classList.add('hidden');
       }
 
+      updatePilihanBulan();
       renderDropdownSiswa();
       renderProfilSiswa();
       renderTabelNilai();
@@ -802,40 +678,104 @@ function filterKelasGuru(kelas){
       document.getElementById('display-pw-ortu-val').textContent = s.pwOrtu || '-';
     }
 
+    function cekKelasCustom() {
+      const selectKelas = document.getElementById('input-kelas').value;
+      const inputCustom = document.getElementById('input-kelas-custom');
+      if (selectKelas === 'CUSTOM') {
+        inputCustom.classList.remove('hidden');
+        inputCustom.required = true;
+      } else {
+        inputCustom.classList.add('hidden');
+        inputCustom.required = false;
+      }
+    }
+
     function simpanDataSiswa(e) {
       e.preventDefault();
+      
       const sekolah = document.getElementById('input-sekolah').value.trim();
       const nama = document.getElementById('input-nama').value.trim();
       const nisn = document.getElementById('input-nisn').value.trim();
-      const kelas = document.getElementById('input-kelas').value.trim();
+      const selectKelas = document.getElementById('input-kelas').value;
+      const customKelas = document.getElementById('input-kelas-custom').value.trim();
       const pwSiswa = document.getElementById('input-pw-siswa').value.trim();
       const pwOrtu = document.getElementById('input-pw-ortu').value.trim();
 
-      if (dbSiswa.length >= 10) { alert('⚠️ Maksimal 10 data siswa.'); return; }
+      const kelasFinal = selectKelas === 'CUSTOM' ? customKelas : selectKelas;
 
-      const newSiswa = {
-        nisn, nama, sekolah, kelas, pwSiswa, pwOrtu,
-        nilai: {}, absensi: {}, prestasi: []
-      };
+      if (!sekolah || !nama || !nisn || !kelasFinal || !pwSiswa || !pwOrtu) {
+        alert("⚠️ Mohon lengkapi semua kolom isian!");
+        return;
+      }
 
-      dbSiswa.push(newSiswa);
-      currentSiswaIndex = dbSiswa.length - 1;
+      if (isEditingSiswa && editSiswaIndex !== null) {
+        dbSiswa[editSiswaIndex] = {
+          ...dbSiswa[editSiswaIndex],
+          sekolah, nama, nisn, kelas: kelasFinal, pwSiswa, pwOrtu
+        };
+        alert("✅ Data Siswa Berhasil Diperbarui!");
+        isEditingSiswa = false;
+        editSiswaIndex = null;
+      } else {
+        const nisnAda = dbSiswa.some(s => s.nisn === nisn);
+        if (nisnAda) {
+          alert("⚠️ NISN sudah terdaftar, gunakan NISN lain!");
+          return;
+        }
+
+        const newSiswa = {
+          nisn, nama, sekolah, kelas: kelasFinal, pwSiswa, pwOrtu,
+          nilai: {}, absensi: {}, prestasi: []
+        };
+
+        dbSiswa.push(newSiswa);
+        currentSiswaIndex = dbSiswa.length - 1;
+        alert("✅ Data Siswa Baru Berhasil Ditambahkan!");
+      }
+
       simpanKeLocalStorage();
+      batalEdit();
       inialisasiDashboard();
-      
-      e.target.reset();
-      alert("✅ Data Siswa Baru Berhasil Ditambahkan!");
     }
 
     function bukaFormEditSiswa() {
       if (dbSiswa.length === 0) return;
       const s = dbSiswa[currentSiswaIndex];
+      isEditingSiswa = true;
+      editSiswaIndex = currentSiswaIndex;
+
+      document.getElementById('form-siswa-title').textContent = "✏️ EDIT DATA SISWA & AKUN AKSES";
+      document.getElementById('btn-submit-siswa').textContent = "💾 Update Data Siswa";
+      document.getElementById('btn-batal-edit').classList.remove('hidden');
+
       document.getElementById('input-sekolah').value = s.sekolah;
       document.getElementById('input-nama').value = s.nama;
       document.getElementById('input-nisn').value = s.nisn;
-      document.getElementById('input-kelas').value = s.kelas;
       document.getElementById('input-pw-siswa').value = s.pwSiswa || '';
       document.getElementById('input-pw-ortu').value = s.pwOrtu || '';
+
+      const selectKelas = document.getElementById('input-kelas');
+      const inputCustom = document.getElementById('input-kelas-custom');
+      
+      const optionExists = Array.from(selectKelas.options).some(opt => opt.value === s.kelas);
+      if (optionExists) {
+        selectKelas.value = s.kelas;
+        inputCustom.classList.add('hidden');
+      } else {
+        selectKelas.value = 'CUSTOM';
+        inputCustom.value = s.kelas;
+        inputCustom.classList.remove('hidden');
+      }
+    }
+
+    function batalEdit() {
+      isEditingSiswa = false;
+      editSiswaIndex = null;
+      document.getElementById('form-siswa').reset();
+      document.getElementById('form-siswa-title').textContent = "➕ KELOLA DATA SISWA & AKUN AKSES";
+      document.getElementById('btn-submit-siswa').textContent = "+ Simpan Data Siswa";
+      document.getElementById('btn-batal-edit').classList.add('hidden');
+      document.getElementById('input-kelas-custom').classList.add('hidden');
     }
 
     function hapusSiswaAktif() {
@@ -844,13 +784,11 @@ function filterKelasGuru(kelas){
         dbSiswa.splice(currentSiswaIndex, 1);
         currentSiswaIndex = 0;
         simpanKeLocalStorage();
+        batalEdit();
         inialisasiDashboard();
       }
     }
 
-    // ------------------------------------------
-    // 3. MATA PELAJARAN & AKADEMIK
-    // ------------------------------------------
     function cekOpsiMapelCustom() {
       const preset = document.getElementById('select-mapel-preset').value;
       const colCustom = document.getElementById('col-mapel-custom');
@@ -966,9 +904,6 @@ function filterKelasGuru(kelas){
       updateRingkasanDanGrafik();
     }
 
-    // ------------------------------------------
-    // 4. MANAJEMEN ABSENSI
-    // ------------------------------------------
     function updatePilihanBulan() {
       const semester = document.getElementById("select-semester-sekolah")?.value || "Ganjil";
       const select = document.getElementById("select-absen-bulan");
@@ -1021,9 +956,6 @@ function filterKelasGuru(kelas){
       alert("💾 Data Nilai dan Absensi Berhasil Disimpan!");
     }
 
-    // ------------------------------------------
-    // 5. MANAJEMEN PRESTASI
-    // ------------------------------------------
     function tambahPrestasiSiswa() {
       if (dbSiswa.length === 0) return;
       const nama = document.getElementById('input-nama-prestasi').value.trim();
@@ -1076,13 +1008,9 @@ function filterKelasGuru(kelas){
       }
     }
 
-    // ------------------------------------------
-    // 6. RINGKASAN DATA & GRAFIK (CHART.JS)
-    // ------------------------------------------
     function gantiSemesterOrtu() {
       const val = document.getElementById('select-semester-ortu').value;
       document.getElementById('select-semester').value = val;
-      document.getElementById('select-semester-sekolah').value = val;
       renderTabelNilai();
       loadAbsensiSemester();
       updateRingkasanDanGrafik();
@@ -1093,14 +1021,13 @@ function filterKelasGuru(kelas){
         document.getElementById('display-rata-rata-semester').textContent = "0.0";
         document.getElementById('display-rata-rata-total').textContent = "0.0";
         document.getElementById('display-total-hadir').textContent = "0 Hari";
-        renderCharts({ nilai: {}, absensi: {} }, "Semester 1", "Semester 1");
+        renderCharts({ nilai: {}, absensi: {} }, "Semester 1", "Ganjil");
         return;
       }
 
       const s = dbSiswa[currentSiswaIndex];
       const semAktif = document.getElementById('select-semester').value;
 
-      // Calculate Rata-Rata Semester Aktif
       let totalSem = 0, countSem = 0;
       if (s.nilai && s.nilai[semAktif]) {
         Object.values(s.nilai[semAktif]).forEach(val => {
@@ -1111,7 +1038,6 @@ function filterKelasGuru(kelas){
       const avgSem = countSem > 0 ? (totalSem / countSem).toFixed(1) : "0.0";
       document.getElementById('display-rata-rata-semester').textContent = avgSem;
 
-      // Calculate Rata-Rata Total Akumulasi (Sem 1-6)
       let totalAll = 0, countAll = 0;
       if (s.nilai) {
         Object.values(s.nilai).forEach(semObj => {
@@ -1124,7 +1050,6 @@ function filterKelasGuru(kelas){
       const avgAll = countAll > 0 ? (totalAll / countAll).toFixed(1) : "0.0";
       document.getElementById('display-rata-rata-total').textContent = avgAll;
 
-      // Calculate Total Kehadiran
       let totalHadir = 0;
       const semAbsen = document.getElementById('select-semester-sekolah').value;
       if (s.absensi && s.absensi[semAbsen]) {
@@ -1134,7 +1059,6 @@ function filterKelasGuru(kelas){
       }
       document.getElementById('display-total-hadir').textContent = `${totalHadir} Hari`;
 
-      // Status KKM Overall
       const statusKkm = document.getElementById('display-status-kkm');
       if (parseFloat(avgSem) >= 75) {
         statusKkm.textContent = "Sesuai KKM (75)";
@@ -1148,7 +1072,6 @@ function filterKelasGuru(kelas){
     }
 
     function renderCharts(s, semAktif, semAbsen) {
-      // 1. Chart Nilai Mapel (Semester Aktif)
       const labelsNilai = s.nilai && s.nilai[semAktif] ? Object.keys(s.nilai[semAktif]) : [];
       const dataNilai = s.nilai && s.nilai[semAktif] ? Object.values(s.nilai[semAktif]) : [];
 
@@ -1179,7 +1102,6 @@ function filterKelasGuru(kelas){
         }
       });
 
-      // 2. Chart Rekap Absensi
       let hadir = 0, sakit = 0, izin = 0, alpha = 0;
       if (s.absensi && s.absensi[semAbsen]) {
         Object.values(s.absensi[semAbsen]).forEach(b => {
@@ -1210,7 +1132,6 @@ function filterKelasGuru(kelas){
         }
       });
 
-      // 3. Chart Tren Rata-Rata Keseluruhan Semester (Semester 1 - 6)
       const daftarSemester = [
         'Semester 1', 'Semester 2', 'Semester 3', 
         'Semester 4', 'Semester 5', 'Semester 6'
