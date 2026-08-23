@@ -87,7 +87,7 @@
       </div>
 
       <div id="role-description" class="bg-cyan-950/40 border border-cyan-500/30 p-3.5 rounded-2xl text-xs text-cyan-200">
-        🔓 <b>Akses Guru:</b> Membutuhkan NIP dan Passcode khusus.
+        🔓 <b>Akses Portal:</b> Masukkan NIP (Guru) atau NISN (Siswa/Ortu) beserta Passcode Anda.
       </div>
 
       <button type="submit" id="btn-submit" class="w-full bg-cyan-400 hover:bg-cyan-300 text-black font-black py-3.5 rounded-2xl text-xs uppercase tracking-wider transition shadow-lg shadow-cyan-500/20">
@@ -106,11 +106,14 @@
           SMART ID CARD ⚡
         </h1>
         <div class="flex items-center gap-2 mt-1">
-          <button onclick="bukaAppStoreBlu()" class="flex items-center gap-1 bg-blue-900/50 border border-blue-500/40 px-2 py-0.5 rounded-lg hover:bg-blue-800 transition">
-            <span class="bg-blue-500 text-black font-black text-[10px] px-1 rounded italic">blu</span>
-            <span class="text-[9px] font-bold text-blue-200 uppercase">by BCA Digital ↗</span>
-          </button>
-          <div class="bg-gradient-to-r from-pink-500 to-purple-600 text-white font-black text-[8px] tracking-widest px-2 py-0.5 rounded-lg uppercase">
+          <div class="flex flex-col items-start">
+            <button onclick="bukaAppStoreBlu()" class="flex items-center gap-1 bg-blue-900/50 border border-blue-500/40 px-2 py-0.5 rounded-lg hover:bg-blue-800 transition">
+              <span class="bg-blue-500 text-black font-black text-[10px] px-1 rounded italic">blu</span>
+              <span class="text-[9px] font-bold text-blue-200 uppercase">Akses blu ↗</span>
+            </button>
+            <span class="text-[8px] text-gray-400 font-semibold italic mt-0.5">Konsep integrasi dalam tahap pengembangan.</span>
+          </div>
+          <div class="bg-gradient-to-r from-pink-500 to-purple-600 text-white font-black text-[8px] tracking-widest px-2 py-0.5 rounded-lg uppercase self-start">
             BY TIM AZWIN
           </div>
         </div>
@@ -232,11 +235,85 @@
           </div>
         </div>
 
-        <div class="flex items-center gap-2 w-full md:w-auto">
+        <div class="flex flex-col items-end w-full md:w-auto">
           <button onclick="bukaAppStoreBlu()" class="w-full md:w-auto bg-blue-600 hover:bg-blue-500 text-white font-black px-4 py-2 rounded-xl text-xs transition glow-blue flex items-center justify-center gap-2">
             <span class="bg-white text-blue-600 font-black px-1 rounded text-[10px]">blu</span>
-            <span>Buka blu BCA</span>
+            <span>Akses blu</span>
           </button>
+          <span class="text-[9px] text-gray-400 font-semibold italic mt-1 text-center md:text-right">Konsep integrasi dalam tahap pengembangan.</span>
+        </div>
+      </section>
+
+      <!-- SECTION MANAJEMEN & MONITORING PEMBAYARAN SPP BULANAN -->
+      <section id="section-spp" class="glass-panel p-4 rounded-2xl space-y-3 border border-emerald-500/30">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 border-b border-white/10 pb-2">
+          <div>
+            <h3 class="font-black text-sm text-emerald-400 uppercase flex items-center gap-1.5">
+              <span>💳 SISTEM MONITORING & PEMBAYARAN SPP</span>
+            </h3>
+            <p class="text-[10px] text-gray-400">Jatuh tempo tanggal 10 setiap bulan. Ortu melakukan pembayaran, Siswa & Guru dapat memantau status.</p>
+          </div>
+          
+          <div class="flex items-center gap-2">
+            <label class="text-xs font-bold text-emerald-300">Pilih Bulan:</label>
+            <select id="select-spp-bulan" onchange="renderSPP()" class="bg-black/80 border border-emerald-500 rounded-lg px-2.5 py-1 text-xs font-bold text-emerald-300 focus:outline-none">
+              <option value="Juli">Juli</option>
+              <option value="Agustus">Agustus</option>
+              <option value="September">September</option>
+              <option value="Oktober">Oktober</option>
+              <option value="November">November</option>
+              <option value="Desember">Desember</option>
+              <option value="Januari">Januari</option>
+              <option value="Februari">Februari</option>
+              <option value="Maret">Maret</option>
+              <option value="April">April</option>
+              <option value="Mei">Mei</option>
+              <option value="Juni">Juni</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="container-spp-content" class="bg-black/40 p-4 rounded-xl border border-white/5 space-y-3">
+          <div class="flex flex-col md:flex-row justify-between md:items-center gap-3">
+            <div>
+              <p class="text-[10px] text-gray-400 font-bold uppercase">Nominal Tagihan SPP Bulanan</p>
+              <h4 id="spp-nominal" class="text-lg font-black text-white">Rp 350.000</h4>
+            </div>
+
+            <div>
+              <p class="text-[10px] text-gray-400 font-bold uppercase">Status Pembayaran Saat Ini</p>
+              <div id="spp-status-badge" class="mt-0.5">
+                <!-- Badge Dinamis Disini -->
+              </div>
+            </div>
+          </div>
+
+          <!-- PESAN TELAT BAYAR (MODAL RED ALERT) -->
+          <div id="spp-warning-telat" class="hidden bg-red-950/90 border-2 border-red-500 p-3 rounded-xl text-xs text-red-200 font-bold animate-pulse">
+            ⚠️ TELAT BAYAR: Tagihan bulan ini telah melewati tanggal jatuh tempo (Tgl 10)! Mohon segera selesaikan pembayaran SPP.
+          </div>
+
+          <!-- FORM KHUSUS PEMBAYARAN ORTU -->
+          <div id="form-spp-ortu" class="hidden border-t border-white/10 pt-3 space-y-2">
+            <h5 class="text-xs font-bold text-fuchsia-300">Form Pembayaran SPP (Akses Orang Tua):</h5>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+              <select id="input-spp-status" class="bg-black/60 border border-fuchsia-500/50 rounded-lg p-2 text-xs font-bold text-white focus:outline-none">
+                <option value="Belum Bayar">🔴 Belum Bayar</option>
+                <option value="Sudah Bayar">🟢 Sudah Bayar / Lunas</option>
+              </select>
+
+              <input type="text" id="input-spp-bukti" placeholder="Isi Catatan / Link Bukti Transfer..." class="bg-black/60 border border-fuchsia-500/50 rounded-lg p-2 text-xs font-bold text-white focus:outline-none">
+
+              <button onclick="simpanPembayaranSPP()" class="bg-fuchsia-600 hover:bg-fuchsia-500 text-white font-black px-4 py-2 rounded-lg text-xs uppercase transition glow-purple">
+                💾 Update Status SPP
+              </button>
+            </div>
+          </div>
+
+          <!-- INFORMASI UNTUK SISWA DAN GURU -->
+          <div id="info-spp-note" class="text-[10px] text-gray-400 italic">
+            <!-- Catatan atau Bukti Transaksi -->
+          </div>
         </div>
       </section>
 
@@ -561,6 +638,10 @@
         absensi: {
           "Ganjil": { "Juli": { hadir: 20, sakit: 1, izin: 0, alpha: 0 } }
         },
+        spp: {
+          "Juli": { status: "Sudah Bayar", bukti: "TRX-JULI-2026-OK" },
+          "Agustus": { status: "Belum Bayar", bukti: "" }
+        },
         prestasi: [
           { nama: "Juara 1 Olimpiade Matematika", tingkat: "Kota/Kabupaten" }
         ]
@@ -591,6 +672,7 @@
       const thAksiMapel = document.getElementById('th-aksi-mapel');
       const thAksiPrestasi = document.getElementById('th-aksi-prestasi');
       const btnSimpanNilai = document.getElementById('btn-simpan-nilai');
+      const formSPPOrtu = document.getElementById('form-spp-ortu');
 
       badgeRole.textContent = `ROLE: ${role.toUpperCase()} ${role === 'guru' ? '👨‍🏫' : role === 'siswa' ? '🎒' : '👨‍👩‍👧'}`;
 
@@ -609,6 +691,7 @@
         thAksiMapel.classList.remove('hidden');
         thAksiPrestasi.classList.remove('hidden');
         btnSimpanNilai.classList.remove('hidden');
+        formSPPOrtu.classList.add('hidden');
       } else if (role === 'ortu') {
         secTambahSiswa.classList.add('hidden');
         secOrtuControl.classList.remove('hidden');
@@ -617,7 +700,9 @@
         thAksiMapel.classList.add('hidden');
         thAksiPrestasi.classList.add('hidden');
         btnSimpanNilai.classList.add('hidden');
+        formSPPOrtu.classList.remove('hidden');
       } else {
+        // SISWA: HANYA MANTAU STATUS
         secTambahSiswa.classList.add('hidden');
         secOrtuControl.classList.add('hidden');
         wrapperTambahMapel.classList.add('hidden');
@@ -625,6 +710,7 @@
         thAksiMapel.classList.add('hidden');
         thAksiPrestasi.classList.add('hidden');
         btnSimpanNilai.classList.add('hidden');
+        formSPPOrtu.classList.add('hidden');
       }
 
       updatePilihanBulan();
@@ -633,6 +719,7 @@
       renderTabelNilai();
       loadAbsensiSemester();
       renderTabelPrestasi();
+      renderSPP();
       updateRingkasanDanGrafik();
     }
 
@@ -656,6 +743,7 @@
       renderTabelNilai();
       loadAbsensiSemester();
       renderTabelPrestasi();
+      renderSPP();
       updateRingkasanDanGrafik();
     }
 
@@ -676,6 +764,94 @@
       document.getElementById('display-kelas').textContent = s.kelas;
       document.getElementById('display-pw-siswa-val').textContent = s.pwSiswa || '-';
       document.getElementById('display-pw-ortu-val').textContent = s.pwOrtu || '-';
+    }
+
+    function renderSPP() {
+      if (dbSiswa.length === 0) return;
+      const s = dbSiswa[currentSiswaIndex];
+      const bulanDipilih = document.getElementById('select-spp-bulan').value;
+      
+      if (!s.spp) s.spp = {};
+      const sppData = s.spp[bulanDipilih] || { status: 'Belum Bayar', bukti: '' };
+
+      const badgeContainer = document.getElementById('spp-status-badge');
+      const warningTelat = document.getElementById('spp-warning-telat');
+      const infoNote = document.getElementById('info-spp-note');
+
+      // URUTAN BULAN TAHUN AJARAN AKADEMIK
+      const urutanBulan = ["Juli", "Agustus", "September", "Oktober", "November", "Desember", "Januari", "Februari", "Maret", "April", "Mei", "Juni"];
+      
+      const dateNow = new Date();
+      const mapIndexBulanSystem = [6, 7, 8, 9, 10, 11, 0, 1, 2, 3, 4, 5]; // Juli=0 s/d Juni=11
+      const idxBulanSekarang = mapIndexBulanSystem[dateNow.getMonth()];
+      const idxBulanPilihan = urutanBulan.indexOf(bulanDipilih);
+
+      const isBelumBayar = (sppData.status === 'Belum Bayar');
+      let isTelat = false;
+
+      if (isBelumBayar) {
+        if (idxBulanPilihan < idxBulanSekarang) {
+          // Bulan yang dipilih sudah berlalu
+          isTelat = true;
+        } else if (idxBulanPilihan === idxBulanSekarang) {
+          // Bulan yang dipilih adalah bulan ini (cek apakah lewat tanggal 10)
+          if (dateNow.getDate() > 10) {
+            isTelat = true;
+          }
+        }
+      }
+
+      if (sppData.status === 'Sudah Bayar') {
+        badgeContainer.innerHTML = `
+          <span class="bg-green-500/20 text-green-400 border border-green-500/40 text-xs font-black px-3 py-1 rounded-lg uppercase inline-block">
+            🟢 SUDAH DIBAYAR / LUNAS
+          </span>
+        `;
+        warningTelat.classList.add('hidden');
+      } else {
+        if (isTelat) {
+          badgeContainer.innerHTML = `
+            <span class="bg-red-600 text-white border border-red-400 text-xs font-black px-3 py-1 rounded-lg uppercase inline-block animate-bounce shadow-lg shadow-red-500/50">
+              🔴 TELAT BAYAR (BULAN ${bulanDipilih.toUpperCase()})
+            </span>
+          `;
+          warningTelat.textContent = `⚠️ TELAT BAYAR: Tagihan SPP bulan ${bulanDipilih} telah melewati tanggal jatuh tempo (Tgl 10)! Mohon segera selesaikan pembayaran.`;
+          warningTelat.classList.remove('hidden');
+        } else {
+          badgeContainer.innerHTML = `
+            <span class="bg-yellow-500/20 text-yellow-300 border border-yellow-500/40 text-xs font-black px-3 py-1 rounded-lg uppercase inline-block">
+              🟡 BELUM DIBAYAR
+            </span>
+          `;
+          warningTelat.classList.add('hidden');
+        }
+      }
+
+      infoNote.textContent = sppData.bukti ? `Catatan/Bukti Transfer: "${sppData.bukti}"` : 'Belum ada bukti transaksi terlampir.';
+
+      const role = localStorage.getItem('smart_id_role');
+      if (role === 'ortu') {
+        document.getElementById('input-spp-status').value = sppData.status;
+        document.getElementById('input-spp-bukti').value = sppData.bukti || '';
+      }
+    }
+
+    function simpanPembayaranSPP() {
+      if (dbSiswa.length === 0) return;
+      const s = dbSiswa[currentSiswaIndex];
+      const bulan = document.getElementById('select-spp-bulan').value;
+      const statusVal = document.getElementById('input-spp-status').value;
+      const buktiVal = document.getElementById('input-spp-bukti').value.trim();
+
+      if (!s.spp) s.spp = {};
+      s.spp[bulan] = {
+        status: statusVal,
+        bukti: buktiVal
+      };
+
+      simpanKeLocalStorage();
+      renderSPP();
+      alert(`✅ Status SPP Bulan ${bulan} Berhasil Diperbarui!`);
     }
 
     function cekKelasCustom() {
@@ -725,7 +901,7 @@
 
         const newSiswa = {
           nisn, nama, sekolah, kelas: kelasFinal, pwSiswa, pwOrtu,
-          nilai: {}, absensi: {}, prestasi: []
+          nilai: {}, absensi: {}, spp: {}, prestasi: []
         };
 
         dbSiswa.push(newSiswa);
