@@ -46,6 +46,7 @@
     }
     .glow-cyan { box-shadow: 0 0 12px rgba(6, 182, 212, 0.3); }
     .glow-blue { box-shadow: 0 0 12px rgba(59, 130, 246, 0.3); }
+    .glow-purple { box-shadow: 0 0 12px rgba(168, 85, 247, 0.3); }
   </style>
 </head>
 <body class="min-h-screen p-3 md:p-6 flex items-center justify-center">
@@ -96,7 +97,6 @@
     </form>
   </div>
 
-
   <!-- VIEW 2: HALAMAN DASHBOARD -->
   <div id="view-dashboard" class="w-full max-w-6xl mx-auto space-y-5 hidden">
     
@@ -123,8 +123,8 @@
         <span id="badge-role" class="bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 text-xs font-black px-3 py-1.5 rounded-xl uppercase">
           ROLE: GURU 👨‍🏫
         </span>
-        <button onclick="alert('Scanner QR ID Card Siap!')" class="bg-cyan-500 hover:bg-cyan-400 text-black font-black px-3 py-1.5 rounded-xl text-xs flex items-center gap-1 glow-cyan transition">
-          🔲 SCAN QR
+        <button onclick="bukaModalTapGerbang()" class="bg-cyan-500 hover:bg-cyan-400 text-black font-black px-3 py-1.5 rounded-xl text-xs flex items-center gap-1 glow-cyan transition">
+          🎴 TAP GERBANG (ABSEN)
         </button>
         <button onclick="logoutSistem()" class="bg-red-500/20 border border-red-500/40 text-red-300 hover:bg-red-500 hover:text-white font-bold px-3 py-1.5 rounded-xl text-xs transition">
           Keluar 🚪
@@ -164,7 +164,7 @@
         </div>
       </section>
 
-      <!-- SECTION: MANAJEMEN SISWA (ROLE GURU) -->
+      <!-- SECTION: MANAJEMEN SISWA (KHUSUS ROLE GURU) -->
       <section id="section-tambah-siswa" class="glass-panel p-4 rounded-2xl space-y-3">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 border-b border-white/10 pb-2">
           <div>
@@ -183,8 +183,14 @@
           </div>
         </div>
 
-        <form id="form-siswa" onsubmit="simpanDataSiswa(event)" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-2">
+        <form id="form-siswa" onsubmit="simpanDataSiswa(event)" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-7 gap-2">
           <input type="text" id="input-sekolah" placeholder="Nama Sekolah..." class="bg-black/50 border border-white/10 rounded-lg p-2 text-xs font-bold text-white focus:outline-none" required>
+          
+          <select id="input-jenis-sekolah" class="bg-black/50 border border-white/10 rounded-lg p-2 text-xs font-bold text-cyan-300 focus:outline-none" required>
+            <option value="Swasta">🏫 Swasta (Dengan SPP)</option>
+            <option value="Negeri">🏛️ Negeri (Bebas SPP)</option>
+          </select>
+
           <input type="text" id="input-nama" placeholder="Nama Lengkap..." class="bg-black/50 border border-white/10 rounded-lg p-2 text-xs font-bold text-white focus:outline-none" required>
           <input type="text" id="input-nisn" placeholder="NISN..." class="bg-black/50 border border-white/10 rounded-lg p-2 text-xs font-bold text-white focus:outline-none" required>
           
@@ -210,7 +216,7 @@
           <input type="text" id="input-pw-siswa" placeholder="PW Siswa..." class="bg-black/50 border border-cyan-500/30 rounded-lg p-2 text-xs font-bold text-cyan-300 focus:outline-none" required>
           <input type="text" id="input-pw-ortu" placeholder="PW Ortu..." class="bg-black/50 border border-fuchsia-500/30 rounded-lg p-2 text-xs font-bold text-fuchsia-300 focus:outline-none" required>
           
-          <div class="col-span-1 md:col-span-3 lg:col-span-6 flex justify-end gap-2">
+          <div class="col-span-1 md:col-span-3 lg:col-span-7 flex justify-end gap-2">
             <button type="button" onclick="batalEdit()" id="btn-batal-edit" class="hidden bg-gray-600 hover:bg-gray-500 text-white font-black px-4 py-2 rounded-lg text-xs uppercase transition">Batal Edit</button>
             <button type="submit" id="btn-submit-siswa" class="bg-cyan-500 hover:bg-cyan-400 text-black font-black px-4 py-2 rounded-lg text-xs uppercase transition">+ Simpan Data Siswa</button>
           </div>
@@ -224,7 +230,8 @@
           <div>
             <h3 id="display-nama" class="font-black text-base text-white">Belum Ada Data Siswa</h3>
             <p class="text-xs text-gray-300 font-bold">
-              Sekolah: <span id="display-sekolah" class="text-cyan-300">-</span> | 
+              Sekolah: <span id="display-sekolah" class="text-cyan-300">-</span> 
+              (<span id="display-jenis-sekolah" class="text-yellow-400 font-bold">-</span>) | 
               NISN: <span id="display-nisn" class="text-yellow-300">-</span> | 
               Kelas: <span id="display-kelas" class="text-yellow-300">-</span>
             </p>
@@ -244,7 +251,7 @@
         </div>
       </section>
 
-      <!-- SECTION MANAJEMEN & MONITORING PEMBAYARAN SPP BULANAN -->
+      <!-- SECTION MANAJEMEN SPP BULANAN -->
       <section id="section-spp" class="glass-panel p-4 rounded-2xl space-y-3 border border-emerald-500/30">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 border-b border-white/10 pb-2">
           <div>
@@ -282,18 +289,14 @@
 
             <div>
               <p class="text-[10px] text-gray-400 font-bold uppercase">Status Pembayaran Saat Ini</p>
-              <div id="spp-status-badge" class="mt-0.5">
-                <!-- Badge Dinamis Disini -->
-              </div>
+              <div id="spp-status-badge" class="mt-0.5"></div>
             </div>
           </div>
 
-          <!-- PESAN TELAT BAYAR (MODAL RED ALERT) -->
           <div id="spp-warning-telat" class="hidden bg-red-950/90 border-2 border-red-500 p-3 rounded-xl text-xs text-red-200 font-bold animate-pulse">
             ⚠️ TELAT BAYAR: Tagihan bulan ini telah melewati tanggal jatuh tempo (Tgl 10)! Mohon segera selesaikan pembayaran SPP.
           </div>
 
-          <!-- FORM KHUSUS PEMBAYARAN ORTU -->
           <div id="form-spp-ortu" class="hidden border-t border-white/10 pt-3 space-y-2">
             <h5 class="text-xs font-bold text-fuchsia-300">Form Pembayaran SPP (Akses Orang Tua):</h5>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
@@ -310,14 +313,45 @@
             </div>
           </div>
 
-          <!-- INFORMASI UNTUK SISWA DAN GURU -->
-          <div id="info-spp-note" class="text-[10px] text-gray-400 italic">
-            <!-- Catatan atau Bukti Transaksi -->
-          </div>
+          <div id="info-spp-note" class="text-[10px] text-gray-400 italic"></div>
         </div>
       </section>
 
-      <!-- KOTAK RINGKASAN TERPISAH -->
+      <!-- SECTION PINJAMAN PERPUSTAKAAN -->
+      <section id="section-perpustakaan" class="glass-panel p-4 rounded-2xl space-y-3 border border-indigo-500/30">
+        <div class="border-b border-white/10 pb-2 flex flex-col md:flex-row justify-between items-start md:items-center gap-2">
+          <div>
+            <h3 class="font-black text-sm text-indigo-400 uppercase flex items-center gap-1.5">
+              <span>📚 SISTEM PINJAMAN BUKU PERPUSTAKAAN</span>
+            </h3>
+            <p class="text-[10px] text-gray-400">Pencatatan sirkulasi peminjaman dan pengembalian buku siswa.</p>
+          </div>
+        </div>
+
+        <div id="form-pinjam-buku" class="grid grid-cols-1 md:grid-cols-4 gap-2 bg-black/40 p-3 rounded-xl border border-white/5">
+          <input type="text" id="input-judul-buku" placeholder="Judul Buku..." class="bg-black/50 border border-white/10 rounded-lg p-2 text-xs font-bold text-white focus:outline-none md:col-span-2">
+          <input type="date" id="input-tgl-pinjam" class="bg-black/50 border border-white/10 rounded-lg p-2 text-xs font-bold text-indigo-300 focus:outline-none">
+          <button onclick="tambahPinjamanBuku()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-black px-3 py-2 rounded-lg text-xs uppercase transition">
+            + Catat Pinjaman
+          </button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-white/10 text-[10px] font-black text-gray-400 uppercase">
+                <th class="p-2">Judul Buku</th>
+                <th class="p-2 w-32">Tgl Pinjam</th>
+                <th class="p-2 w-32">Status</th>
+                <th id="th-aksi-perpus" class="p-2 w-28">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="tabel-perpus-body" class="text-xs font-bold"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- KOTAK RINGKASAN -->
       <section id="section-ringkasan-box" class="grid grid-cols-1 md:grid-cols-4 gap-3">
         <div class="glass-panel p-3.5 rounded-xl flex items-center gap-3 border-l-4 border-cyan-400">
           <div class="text-2xl">📊</div>
@@ -389,13 +423,9 @@
                 <option value="Sejarah">Sejarah</option>
                 <option value="Pendidikan Pancasila / PPKn">Pendidikan Pancasila / PPKn</option>
                 <option value="Pendidikan Agama Islam (PAI)">Pendidikan Agama Islam (PAI)</option>
-                <option value="Pendidikan Agama Kristen">Pendidikan Agama Kristen</option>
-                <option value="Pendidikan Agama Katolik">Pendidikan Agama Katolik</option>
                 <option value="PJOK">PJOK (Pendidikan Jasmani & Olahraga)</option>
                 <option value="Informatika / Komputer">Informatika / Komputer</option>
                 <option value="Seni Budaya">Seni Budaya</option>
-                <option value="Prakarya & Kewirausahaan">Prakarya & Kewirausahaan</option>
-                <option value="Bahasa Daerah">Bahasa Daerah</option>
                 <option value="CUSTOM">📝 LAINNYA (ISI MAPEL CUSTOM/BEBAS)</option>
               </select>
             </div>
@@ -428,7 +458,7 @@
           </div>
         </div>
 
-        <!-- ABSENSI DENGAN KETERANGAN SEMESTER & BULAN -->
+        <!-- ABSENSI DEPAN / KAMPUS -->
         <div id="wrapper-input-absen" class="border-t border-white/10 pt-3 space-y-3">
           <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-2">
             <h4 class="text-xs font-black text-green-400 uppercase">📋 MANAJEMEN ABSENSI TERSTRUKTUR</h4>
@@ -471,7 +501,7 @@
         </button>
       </section>
 
-      <!-- SECTION FITUR PRESTASI SISWA -->
+      <!-- SECTION PRESTASI -->
       <section id="section-prestasi" class="glass-panel p-4 rounded-2xl space-y-3 border border-yellow-500/30">
         <div class="border-b border-white/10 pb-2 flex justify-between items-center">
           <h3 class="font-black text-sm text-yellow-400">🏆 CATATAN PRESTASI & PENGHARGAAN SISWA</h3>
@@ -505,7 +535,7 @@
         </div>
       </section>
 
-      <!-- SECTION GRAFIK ANALISIS (CHART.JS) -->
+      <!-- SECTION GRAFIK ANALISIS -->
       <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="glass-panel p-4 rounded-2xl space-y-2">
           <h4 class="text-xs font-black text-cyan-400 uppercase tracking-wider">📈 GRAFIK PERKEMBANGAN NILAI</h4>
@@ -531,6 +561,32 @@
       </section>
 
     </main>
+  </div>
+
+  <!-- MODAL TAP ID CARD (GERBANG SEKOLAH AUTO-ABSEN) -->
+  <div id="modal-tap-gerbang" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
+    <div class="glass-panel p-6 rounded-3xl max-w-sm w-full border border-cyan-500/40 text-center space-y-4">
+      <div class="text-4xl">🚪🎴</div>
+      <div>
+        <h3 class="text-lg font-black text-cyan-400 uppercase">GATE ABSENSI GERBANG</h3>
+        <p class="text-xs text-gray-300 font-semibold mt-1">Tempelkan/Tap Smart ID Card Anda pada scanner gerbang sekolah.</p>
+      </div>
+
+      <div class="bg-black/60 p-4 rounded-2xl border border-white/10 space-y-2">
+        <p class="text-[10px] text-gray-400 uppercase font-bold">Status Siswa Aktif:</p>
+        <p id="gate-nama-siswa" class="text-sm font-black text-yellow-300">-</p>
+        <p id="gate-nisn-siswa" class="text-xs text-cyan-400 font-bold">-</p>
+      </div>
+
+      <div class="space-y-2">
+        <button onclick="prosesTapGerbang()" class="w-full bg-cyan-400 hover:bg-cyan-300 text-black font-black py-3 rounded-xl text-xs uppercase tracking-wider transition glow-cyan">
+          ⚡ TAP KARTU SEKARANG
+        </button>
+        <button onclick="tutupModalTapGerbang()" class="w-full bg-gray-800 hover:bg-gray-700 text-gray-300 font-bold py-2 rounded-xl text-xs transition">
+          Batal / Tutup
+        </button>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -629,6 +685,7 @@
         nisn: "2001",
         nama: "Marsha",
         sekolah: "SMA Negeri 1",
+        jenisSekolah: "Negeri",
         kelas: "XII IPA 1",
         pwSiswa: "Marsha123",
         pwOrtu: "OrtuMarsha#",
@@ -638,12 +695,12 @@
         absensi: {
           "Ganjil": { "Juli": { hadir: 20, sakit: 1, izin: 0, alpha: 0 } }
         },
-        spp: {
-          "Juli": { status: "Sudah Bayar", bukti: "TRX-JULI-2026-OK" },
-          "Agustus": { status: "Belum Bayar", bukti: "" }
-        },
+        spp: {},
         prestasi: [
           { nama: "Juara 1 Olimpiade Matematika", tingkat: "Kota/Kabupaten" }
+        ],
+        perpustakaan: [
+          { judul: "Laskar Pelangi", tglPinjam: "2026-08-01", dipinjam: true }
         ]
       }
     ];
@@ -669,10 +726,13 @@
       const secOrtuControl = document.getElementById('section-ortu-control');
       const wrapperTambahMapel = document.getElementById('wrapper-tambah-mapel');
       const formPrestasiGuru = document.getElementById('form-prestasi-guru');
+      const formPinjamBuku = document.getElementById('form-pinjam-buku');
       const thAksiMapel = document.getElementById('th-aksi-mapel');
       const thAksiPrestasi = document.getElementById('th-aksi-prestasi');
+      const thAksiPerpus = document.getElementById('th-aksi-perpus');
       const btnSimpanNilai = document.getElementById('btn-simpan-nilai');
       const formSPPOrtu = document.getElementById('form-spp-ortu');
+      const wrapperInputAbsen = document.getElementById('wrapper-input-absen');
 
       badgeRole.textContent = `ROLE: ${role.toUpperCase()} ${role === 'guru' ? '👨‍🏫' : role === 'siswa' ? '🎒' : '👨‍👩‍👧'}`;
 
@@ -683,34 +743,49 @@
         }
       }
 
+      // KEAMANAN: HANYA GURU YANG BISA INPUT/EDIT/MENGACAK-ACAK DATA
       if (role === 'guru') {
         secTambahSiswa.classList.remove('hidden');
         secOrtuControl.classList.add('hidden');
         wrapperTambahMapel.classList.remove('hidden');
         formPrestasiGuru.classList.remove('hidden');
+        formPinjamBuku.classList.remove('hidden');
         thAksiMapel.classList.remove('hidden');
         thAksiPrestasi.classList.remove('hidden');
+        thAksiPerpus.classList.remove('hidden');
         btnSimpanNilai.classList.remove('hidden');
         formSPPOrtu.classList.add('hidden');
+        
+        // Input Absen aktif
+        setAbsenInputDisabled(false);
       } else if (role === 'ortu') {
         secTambahSiswa.classList.add('hidden');
         secOrtuControl.classList.remove('hidden');
         wrapperTambahMapel.classList.add('hidden');
         formPrestasiGuru.classList.add('hidden');
+        formPinjamBuku.classList.add('hidden');
         thAksiMapel.classList.add('hidden');
         thAksiPrestasi.classList.add('hidden');
+        thAksiPerpus.classList.add('hidden');
         btnSimpanNilai.classList.add('hidden');
         formSPPOrtu.classList.remove('hidden');
+        
+        // Siswa/Ortu dikunci (Read Only)
+        setAbsenInputDisabled(true);
       } else {
-        // SISWA: HANYA MANTAU STATUS
+        // SISWA: READ ONLY TOTAL
         secTambahSiswa.classList.add('hidden');
         secOrtuControl.classList.add('hidden');
         wrapperTambahMapel.classList.add('hidden');
         formPrestasiGuru.classList.add('hidden');
+        formPinjamBuku.classList.add('hidden');
         thAksiMapel.classList.add('hidden');
         thAksiPrestasi.classList.add('hidden');
+        thAksiPerpus.classList.add('hidden');
         btnSimpanNilai.classList.add('hidden');
         formSPPOrtu.classList.add('hidden');
+        
+        setAbsenInputDisabled(true);
       }
 
       updatePilihanBulan();
@@ -719,8 +794,16 @@
       renderTabelNilai();
       loadAbsensiSemester();
       renderTabelPrestasi();
+      renderTabelPerpustakaan();
       renderSPP();
       updateRingkasanDanGrafik();
+    }
+
+    function setAbsenInputDisabled(isDisabled) {
+      document.getElementById('absen-hadir').disabled = isDisabled;
+      document.getElementById('absen-sakit').disabled = isDisabled;
+      document.getElementById('absen-izin').disabled = isDisabled;
+      document.getElementById('absen-alpha').disabled = isDisabled;
     }
 
     function renderDropdownSiswa() {
@@ -743,6 +826,7 @@
       renderTabelNilai();
       loadAbsensiSemester();
       renderTabelPrestasi();
+      renderTabelPerpustakaan();
       renderSPP();
       updateRingkasanDanGrafik();
     }
@@ -751,6 +835,7 @@
       if (dbSiswa.length === 0) {
         document.getElementById('display-nama').textContent = "Belum Ada Data Siswa";
         document.getElementById('display-sekolah').textContent = "-";
+        document.getElementById('display-jenis-sekolah').textContent = "-";
         document.getElementById('display-nisn').textContent = "-";
         document.getElementById('display-kelas').textContent = "-";
         document.getElementById('display-pw-siswa-val').textContent = "-";
@@ -758,8 +843,16 @@
         return;
       }
       const s = dbSiswa[currentSiswaIndex];
+      
+      let jenis = s.jenisSekolah;
+      if (!jenis) {
+        jenis = s.sekolah.toLowerCase().includes('negeri') ? 'Negeri' : 'Swasta';
+        s.jenisSekolah = jenis;
+      }
+
       document.getElementById('display-nama').textContent = s.nama;
       document.getElementById('display-sekolah').textContent = s.sekolah;
+      document.getElementById('display-jenis-sekolah').textContent = jenis;
       document.getElementById('display-nisn').textContent = s.nisn;
       document.getElementById('display-kelas').textContent = s.kelas;
       document.getElementById('display-pw-siswa-val').textContent = s.pwSiswa || '-';
@@ -767,10 +860,20 @@
     }
 
     function renderSPP() {
+      const secSPP = document.getElementById('section-spp');
       if (dbSiswa.length === 0) return;
-      const s = dbSiswa[currentSiswaIndex];
-      const bulanDipilih = document.getElementById('select-spp-bulan').value;
       
+      const s = dbSiswa[currentSiswaIndex];
+      const jenis = s.jenisSekolah || (s.sekolah.toLowerCase().includes('negeri') ? 'Negeri' : 'Swasta');
+
+      if (jenis === 'Negeri') {
+        secSPP.classList.add('hidden');
+        return;
+      } else {
+        secSPP.classList.remove('hidden');
+      }
+
+      const bulanDipilih = document.getElementById('select-spp-bulan').value;
       if (!s.spp) s.spp = {};
       const sppData = s.spp[bulanDipilih] || { status: 'Belum Bayar', bukti: '' };
 
@@ -778,11 +881,10 @@
       const warningTelat = document.getElementById('spp-warning-telat');
       const infoNote = document.getElementById('info-spp-note');
 
-      // URUTAN BULAN TAHUN AJARAN AKADEMIK
       const urutanBulan = ["Juli", "Agustus", "September", "Oktober", "November", "Desember", "Januari", "Februari", "Maret", "April", "Mei", "Juni"];
       
       const dateNow = new Date();
-      const mapIndexBulanSystem = [6, 7, 8, 9, 10, 11, 0, 1, 2, 3, 4, 5]; // Juli=0 s/d Juni=11
+      const mapIndexBulanSystem = [6, 7, 8, 9, 10, 11, 0, 1, 2, 3, 4, 5];
       const idxBulanSekarang = mapIndexBulanSystem[dateNow.getMonth()];
       const idxBulanPilihan = urutanBulan.indexOf(bulanDipilih);
 
@@ -791,10 +893,8 @@
 
       if (isBelumBayar) {
         if (idxBulanPilihan < idxBulanSekarang) {
-          // Bulan yang dipilih sudah berlalu
           isTelat = true;
         } else if (idxBulanPilihan === idxBulanSekarang) {
-          // Bulan yang dipilih adalah bulan ini (cek apakah lewat tanggal 10)
           if (dateNow.getDate() > 10) {
             isTelat = true;
           }
@@ -854,6 +954,119 @@
       alert(`✅ Status SPP Bulan ${bulan} Berhasil Diperbarui!`);
     }
 
+    /* FITUR GERBANG TAP ABSEN OTOMATIS */
+    function bukaModalTapGerbang() {
+      if (dbSiswa.length === 0) {
+        alert("⚠️ Belum ada data siswa terdaftar!");
+        return;
+      }
+      const s = dbSiswa[currentSiswaIndex];
+      document.getElementById('gate-nama-siswa').textContent = s.nama;
+      document.getElementById('gate-nisn-siswa').textContent = `NISN: ${s.nisn}`;
+      document.getElementById('modal-tap-gerbang').classList.remove('hidden');
+    }
+
+    function tutupModalTapGerbang() {
+      document.getElementById('modal-tap-gerbang').classList.add('hidden');
+    }
+
+    function prosesTapGerbang() {
+      if (dbSiswa.length === 0) return;
+      const s = dbSiswa[currentSiswaIndex];
+
+      const daftarBulanStr = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+      const bulanNowStr = daftarBulanStr[new Date().getMonth()];
+      const isGanjil = [6, 7, 8, 9, 10, 11].includes(new Date().getMonth());
+      const semKey = isGanjil ? "Ganjil" : "Genap";
+
+      if (!s.absensi) s.absensi = {};
+      if (!s.absensi[semKey]) s.absensi[semKey] = {};
+      if (!s.absensi[semKey][bulanNowStr]) {
+        s.absensi[semKey][bulanNowStr] = { hadir: 0, sakit: 0, izin: 0, alpha: 0 };
+      }
+
+      s.absensi[semKey][bulanNowStr].hadir += 1;
+
+      simpanKeLocalStorage();
+      loadAbsensiSemester();
+      updateRingkasanDanGrafik();
+
+      tutupModalTapGerbang();
+      alert(`✅ TAP BERHASIL! Kehadiran ${s.nama} telah dicatat otomatis untuk bulan ${bulanNowStr}.`);
+    }
+
+    function tambahPinjamanBuku() {
+      if (dbSiswa.length === 0) return;
+      const judul = document.getElementById('input-judul-buku').value.trim();
+      const tglPinjam = document.getElementById('input-tgl-pinjam').value;
+
+      if (!judul || !tglPinjam) {
+        alert("⚠️ Isikan judul buku dan tanggal peminjaman!");
+        return;
+      }
+
+      const s = dbSiswa[currentSiswaIndex];
+      if (!s.perpustakaan) s.perpustakaan = [];
+      s.perpustakaan.push({
+        judul,
+        tglPinjam,
+        dipinjam: true
+      });
+
+      simpanKeLocalStorage();
+      renderTabelPerpustakaan();
+      document.getElementById('input-judul-buku').value = '';
+      document.getElementById('input-tgl-pinjam').value = '';
+    }
+
+    function kembalikanBuku(idx) {
+      const s = dbSiswa[currentSiswaIndex];
+      if (s.perpustakaan && s.perpustakaan[idx]) {
+        s.perpustakaan[idx].dipinjam = false;
+        simpanKeLocalStorage();
+        renderTabelPerpustakaan();
+      }
+    }
+
+    function hapusPinjamanBuku(idx) {
+      if (confirm("Hapus rekam peminjaman ini?")) {
+        dbSiswa[currentSiswaIndex].perpustakaan.splice(idx, 1);
+        simpanKeLocalStorage();
+        renderTabelPerpustakaan();
+      }
+    }
+
+    function renderTabelPerpustakaan() {
+      const tbody = document.getElementById('tabel-perpus-body');
+      tbody.innerHTML = '';
+      if (dbSiswa.length === 0) return;
+
+      const role = localStorage.getItem('smart_id_role') || 'guru';
+      const s = dbSiswa[currentSiswaIndex];
+      const list = s.perpustakaan || [];
+
+      list.forEach((item, idx) => {
+        const tr = document.createElement('tr');
+        tr.className = "border-b border-white/5 hover:bg-white/5 transition";
+        tr.innerHTML = `
+          <td class="p-2 text-white font-bold">${item.judul}</td>
+          <td class="p-2 text-indigo-300">${item.tglPinjam}</td>
+          <td class="p-2">
+            <span class="px-2 py-0.5 rounded text-[10px] font-black ${item.dipinjam ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'}">
+              ${item.dipinjam ? '📖 DIPINJAM' : '✅ DIKEMBALIKAN'}
+            </span>
+          </td>
+          ${role === 'guru' ? `
+            <td class="p-2 flex gap-1">
+              ${item.dipinjam ? `<button onclick="kembalikanBuku(${idx})" class="bg-indigo-600/40 hover:bg-indigo-600 text-indigo-200 px-2 py-0.5 rounded text-[10px] font-bold">Kembali</button>` : ''}
+              <button onclick="hapusPinjamanBuku(${idx})" class="text-red-400 hover:text-red-300 font-bold text-xs">🗑️</button>
+            </td>
+          ` : ''}
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
     function cekKelasCustom() {
       const selectKelas = document.getElementById('input-kelas').value;
       const inputCustom = document.getElementById('input-kelas-custom');
@@ -870,6 +1083,7 @@
       e.preventDefault();
       
       const sekolah = document.getElementById('input-sekolah').value.trim();
+      const jenisSekolah = document.getElementById('input-jenis-sekolah').value;
       const nama = document.getElementById('input-nama').value.trim();
       const nisn = document.getElementById('input-nisn').value.trim();
       const selectKelas = document.getElementById('input-kelas').value;
@@ -887,7 +1101,7 @@
       if (isEditingSiswa && editSiswaIndex !== null) {
         dbSiswa[editSiswaIndex] = {
           ...dbSiswa[editSiswaIndex],
-          sekolah, nama, nisn, kelas: kelasFinal, pwSiswa, pwOrtu
+          sekolah, jenisSekolah, nama, nisn, kelas: kelasFinal, pwSiswa, pwOrtu
         };
         alert("✅ Data Siswa Berhasil Diperbarui!");
         isEditingSiswa = false;
@@ -900,8 +1114,8 @@
         }
 
         const newSiswa = {
-          nisn, nama, sekolah, kelas: kelasFinal, pwSiswa, pwOrtu,
-          nilai: {}, absensi: {}, spp: {}, prestasi: []
+          nisn, nama, sekolah, jenisSekolah, kelas: kelasFinal, pwSiswa, pwOrtu,
+          nilai: {}, absensi: {}, spp: {}, prestasi: [], perpustakaan: []
         };
 
         dbSiswa.push(newSiswa);
@@ -925,6 +1139,7 @@
       document.getElementById('btn-batal-edit').classList.remove('hidden');
 
       document.getElementById('input-sekolah').value = s.sekolah;
+      document.getElementById('input-jenis-sekolah').value = s.jenisSekolah || (s.sekolah.toLowerCase().includes('negeri') ? 'Negeri' : 'Swasta');
       document.getElementById('input-nama').value = s.nama;
       document.getElementById('input-nisn').value = s.nisn;
       document.getElementById('input-pw-siswa').value = s.pwSiswa || '';
