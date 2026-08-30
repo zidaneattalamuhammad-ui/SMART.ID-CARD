@@ -250,14 +250,14 @@
         </div>
       </section>
 
-      <!-- SECTION MANAJEMEN & MONITORING PEMBAYARAN SPP BULANAN (KHUSUS SWASTA) -->
+      <!-- SECTION MANAJEMEN & MONITORING PEMBAYARAN SPP BULANAN -->
       <section id="section-spp" class="glass-panel p-4 rounded-2xl space-y-3 border border-emerald-500/30">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 border-b border-white/10 pb-2">
           <div>
             <h3 class="font-black text-sm text-emerald-400 uppercase flex items-center gap-1.5">
               <span>💳 SISTEM MONITORING & PEMBAYARAN SPP</span>
             </h3>
-            <p class="text-[10px] text-gray-400">Jatuh tempo tanggal 10 setiap bulan. Guru menetapkan tarif, Ortu melakukan pembayaran.</p>
+            <p class="text-[10px] text-gray-400">Jatuh tempo tanggal 10 setiap bulan. Guru menetapkan tarif, Ortu melakukan upload bukti transfer dari galeri.</p>
           </div>
           
           <div class="flex items-center gap-2">
@@ -281,15 +281,24 @@
 
         <div id="container-spp-content" class="bg-black/40 p-4 rounded-xl border border-white/5 space-y-3">
           
-          <!-- FORM KHUSUS GURU: PENGATURAN NOMINAL TAGIHAN SPP -->
-          <div id="form-spp-guru" class="hidden bg-emerald-950/30 border border-emerald-500/40 p-3 rounded-xl space-y-2">
-            <h5 class="text-xs font-bold text-emerald-300 flex items-center gap-1"> KELOLA NOMINAL TAGIHAN SPP (AKSES GURU)</h5>
+          <!-- FORM KHUSUS GURU: PENGATURAN NOMINAL TAGIHAN SPP & VERIFIKASI -->
+          <div id="form-spp-guru" class="hidden bg-emerald-950/30 border border-emerald-500/40 p-3 rounded-xl space-y-3">
+            <h5 class="text-xs font-bold text-emerald-300 flex items-center gap-1">⚙️ KELOLA NOMINAL & VERIFIKASI SPP (AKSES GURU)</h5>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
               <div class="md:col-span-2">
                 <input type="number" id="input-spp-nominal-guru" placeholder="Masukkan Nominal Tagihan (Contoh: 350000)..." class="w-full bg-black/60 border border-emerald-500/50 rounded-lg p-2 text-xs font-bold text-white focus:outline-none">
               </div>
               <button onclick="simpanNominalSPPGuru()" class="bg-emerald-600 hover:bg-emerald-500 text-black font-black px-4 py-2 rounded-lg text-xs uppercase transition">
                 💾 Set Harga SPP
+              </button>
+            </div>
+            
+            <div id="guru-verifikasi-box" class="border-t border-emerald-500/30 pt-2 flex flex-col md:flex-row justify-between items-center gap-2">
+              <div class="text-xs font-bold text-white">
+                Bukti Transfer Siswa: <span id="guru-bukti-link" class="text-cyan-400 italic">Belum ada file diunggah</span>
+              </div>
+              <button id="btn-verifikasi-lunas" onclick="konfirmasiLunasGuru()" class="hidden bg-green-500 hover:bg-green-400 text-black font-black px-3 py-1.5 rounded-lg text-xs uppercase transition">
+                ✅ Konfirmasi Pembayaran (Set Lunas)
               </button>
             </div>
           </div>
@@ -311,19 +320,17 @@
             ⚠️ TELAT BAYAR: Tagihan bulan ini telah melewati tanggal jatuh tempo (Tgl 10)! Mohon segera selesaikan pembayaran SPP.
           </div>
 
-          <!-- FORM KHUSUS PEMBAYARAN ORTU -->
+          <!-- FORM KHUSUS PEMBAYARAN ORTU (UPLOAD FOTO DARI GALERI) -->
           <div id="form-spp-ortu" class="hidden border-t border-white/10 pt-3 space-y-2">
-            <h5 class="text-xs font-bold text-fuchsia-300">Form Pembayaran SPP (Akses Orang Tua):</h5>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
-              <select id="input-spp-status" class="bg-black/60 border border-fuchsia-500/50 rounded-lg p-2 text-xs font-bold text-white focus:outline-none">
-                <option value="Belum Bayar">🔴 Belum Bayar</option>
-                <option value="Sudah Bayar">🟢 Sudah Bayar / Lunas</option>
-              </select>
+            <h5 class="text-xs font-bold text-fuchsia-300">📤 Form Unggah Bukti Pembayaran SPP (Akses Orang Tua):</h5>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-2 items-center">
+              <div class="md:col-span-2">
+                <label class="text-[10px] text-gray-400 block mb-1">Pilih File Foto/Screenshot Bukti Transfer dari Album HP:</label>
+                <input type="file" id="input-spp-file" accept="image/*" class="w-full bg-black/60 border border-fuchsia-500/50 rounded-lg p-1.5 text-xs font-bold text-white focus:outline-none">
+              </div>
 
-              <input type="text" id="input-spp-bukti" placeholder="Isi Catatan / Link Bukti Transfer..." class="bg-black/60 border border-fuchsia-500/50 rounded-lg p-2 text-xs font-bold text-white focus:outline-none">
-
-              <button onclick="simpanPembayaranSPP()" class="bg-fuchsia-600 hover:bg-fuchsia-500 text-white font-black px-4 py-2 rounded-lg text-xs uppercase transition glow-purple">
-                💾 Update Status SPP
+              <button onclick="simpanPembayaranSPPOrtu()" class="bg-fuchsia-600 hover:bg-fuchsia-500 text-white font-black px-4 py-2.5 rounded-lg text-xs uppercase transition glow-purple">
+                🚀 Kirim Bukti Transfer
               </button>
             </div>
           </div>
@@ -863,7 +870,7 @@
 
       const bulanDipilih = document.getElementById('select-spp-bulan').value;
       if (!s.spp) s.spp = {};
-      const sppData = s.spp[bulanDipilih] || { status: 'Belum Bayar', bukti: '' };
+      const sppData = s.spp[bulanDipilih] || { status: 'Belum Bayar', bukti: '', fileName: '' };
 
       const badgeContainer = document.getElementById('spp-status-badge');
       const warningTelat = document.getElementById('spp-warning-telat');
@@ -896,6 +903,13 @@
           </span>
         `;
         warningTelat.classList.add('hidden');
+      } else if (sppData.status === 'Menunggu Verifikasi') {
+        badgeContainer.innerHTML = `
+          <span class="bg-orange-500/20 text-orange-300 border border-orange-500/40 text-xs font-black px-3 py-1 rounded-lg uppercase inline-block">
+            🟠 MENUNGGU VERIFIKASI GURU
+          </span>
+        `;
+        warningTelat.classList.add('hidden');
       } else {
         if (isTelat) {
           badgeContainer.innerHTML = `
@@ -915,11 +929,26 @@
         }
       }
 
-      infoNote.textContent = sppData.bukti ? `Catatan/Bukti Transfer: "${sppData.bukti}"` : 'Belum ada bukti transaksi terlampir.';
+      // Keterangan Sisi Guru / Ortu tentang Bukti Foto Transfer
+      const guruLink = document.getElementById('guru-bukti-link');
+      const btnVerifikasi = document.getElementById('btn-verifikasi-lunas');
 
-      if (role === 'ortu') {
-        document.getElementById('input-spp-status').value = sppData.status;
-        document.getElementById('input-spp-bukti').value = sppData.bukti || '';
+      if (sppData.bukti) {
+        infoNote.innerHTML = `Bukti Transfer Terlampir: <b>${sppData.fileName || 'Berkas Foto'}</b> (<a href="${sppData.bukti}" target="_blank" class="text-cyan-400 underline">Klik untuk Melihat Foto Bukti Transfer</a>)`;
+        if (guruLink) {
+          guruLink.innerHTML = `<a href="${sppData.bukti}" target="_blank" class="text-cyan-400 underline font-bold">📂 Buka File Foto Bukti Transfer (${sppData.fileName || 'Image'})</a>`;
+        }
+        if (btnVerifikasi) {
+          if (sppData.status !== 'Sudah Bayar') {
+            btnVerifikasi.classList.remove('hidden');
+          } else {
+            btnVerifikasi.classList.add('hidden');
+          }
+        }
+      } else {
+        infoNote.textContent = 'Belum ada foto/berkas bukti transfer diunggah dari galeri.';
+        if (guruLink) guruLink.textContent = 'Belum ada file diunggah';
+        if (btnVerifikasi) btnVerifikasi.classList.add('hidden');
       }
     }
 
@@ -934,22 +963,48 @@
       alert(`✅ Nominal SPP untuk ${dbSiswa[currentSiswaIndex].nama} berhasil diperbarui menjadi Rp ${nominal.toLocaleString('id-ID')}`);
     }
 
-    function simpanPembayaranSPP() {
+    function simpanPembayaranSPPOrtu() {
+      if (dbSiswa.length === 0) return;
+      const fileInput = document.getElementById('input-spp-file');
+      const file = fileInput.files[0];
+
+      if (!file) {
+        alert("⚠️ Silakan pilih gambar/foto bukti transfer dari album HP terlebih dahulu!");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const base64Image = e.target.result;
+        const s = dbSiswa[currentSiswaIndex];
+        const bulan = document.getElementById('select-spp-bulan').value;
+
+        if (!s.spp) s.spp = {};
+        s.spp[bulan] = {
+          status: 'Menunggu Verifikasi',
+          bukti: base64Image,
+          fileName: file.name
+        };
+
+        simpanKeLocalStorage();
+        renderSPP();
+        alert(`✅ Bukti transfer bulan ${bulan} berhasil dikirim! Menunggu verifikasi dari guru.`);
+        fileInput.value = '';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function konfirmasiLunasGuru() {
       if (dbSiswa.length === 0) return;
       const s = dbSiswa[currentSiswaIndex];
       const bulan = document.getElementById('select-spp-bulan').value;
-      const statusVal = document.getElementById('input-spp-status').value;
-      const buktiVal = document.getElementById('input-spp-bukti').value.trim();
 
-      if (!s.spp) s.spp = {};
-      s.spp[bulan] = {
-        status: statusVal,
-        bukti: buktiVal
-      };
-
-      simpanKeLocalStorage();
-      renderSPP();
-      alert(`✅ Status SPP Bulan ${bulan} Berhasil Diperbarui!`);
+      if (s.spp && s.spp[bulan]) {
+        s.spp[bulan].status = 'Sudah Bayar';
+        simpanKeLocalStorage();
+        renderSPP();
+        alert(`✅ Pembayaran SPP Bulan ${bulan} untuk ${s.nama} telah diverifikasi LUNAS!`);
+      }
     }
 
     function tambahPinjamanBuku() {
