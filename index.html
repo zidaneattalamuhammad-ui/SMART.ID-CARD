@@ -875,9 +875,11 @@
       const badgeContainer = document.getElementById('spp-status-badge');
       const warningTelat = document.getElementById('spp-warning-telat');
       const infoNote = document.getElementById('info-spp-note');
+      const formSPPOrtu = document.getElementById('form-spp-ortu');
+      const guruLink = document.getElementById('guru-bukti-link');
+      const btnVerifikasi = document.getElementById('btn-verifikasi-lunas');
 
       const urutanBulan = ["Juli", "Agustus", "September", "Oktober", "November", "Desember", "Januari", "Februari", "Maret", "April", "Mei", "Juni"];
-      
       const dateNow = new Date();
       const mapIndexBulanSystem = [6, 7, 8, 9, 10, 11, 0, 1, 2, 3, 4, 5];
       const idxBulanSekarang = mapIndexBulanSystem[dateNow.getMonth()];
@@ -889,10 +891,8 @@
       if (isBelumBayar) {
         if (idxBulanPilihan < idxBulanSekarang) {
           isTelat = true;
-        } else if (idxBulanPilihan === idxBulanSekarang) {
-          if (dateNow.getDate() > 10) {
-            isTelat = true;
-          }
+        } else if (idxBulanPilihan === idxBulanSekarang && dateNow.getDate() > 10) {
+          isTelat = true;
         }
       }
 
@@ -903,6 +903,9 @@
           </span>
         `;
         warningTelat.classList.add('hidden');
+        if (role === 'ortu' && formSPPOrtu) {
+          formSPPOrtu.classList.add('hidden');
+        }
       } else if (sppData.status === 'Menunggu Verifikasi') {
         badgeContainer.innerHTML = `
           <span class="bg-orange-500/20 text-orange-300 border border-orange-500/40 text-xs font-black px-3 py-1 rounded-lg uppercase inline-block">
@@ -910,6 +913,9 @@
           </span>
         `;
         warningTelat.classList.add('hidden');
+        if (role === 'ortu' && formSPPOrtu) {
+          formSPPOrtu.classList.remove('hidden');
+        }
       } else {
         if (isTelat) {
           badgeContainer.innerHTML = `
@@ -927,11 +933,10 @@
           `;
           warningTelat.classList.add('hidden');
         }
+        if (role === 'ortu' && formSPPOrtu) {
+          formSPPOrtu.classList.remove('hidden');
+        }
       }
-
-      // Keterangan Sisi Guru / Ortu tentang Bukti Foto Transfer
-      const guruLink = document.getElementById('guru-bukti-link');
-      const btnVerifikasi = document.getElementById('btn-verifikasi-lunas');
 
       if (sppData.bukti) {
         infoNote.innerHTML = `Bukti Transfer Terlampir: <b>${sppData.fileName || 'Berkas Foto'}</b> (<a href="${sppData.bukti}" target="_blank" class="text-cyan-400 underline">Klik untuk Melihat Foto Bukti Transfer</a>)`;
